@@ -11,7 +11,7 @@ const psnApi = axios.create({
 })
 
 psnApi.interceptors.request.use(async config => {
-    // TODO store token in a cookie and check if it is expired
+    // TODO store token in a cookie and check if it is expired and handle the type cast for process env
     const accessCode = await exchangeNpssoForAccessCode(process.env.NPSSO!);
     const auth = await exchangeAccessCodeForAuthTokens(accessCode);
 
