@@ -18,13 +18,24 @@ import {
   getPlayabilityColor,
   getPlayabilityLabel,
 } from "./utils";
+import { EmptyList } from "./empty-list";
+import { VoteButtons } from "../vote-buttons";
+import { cn } from "@/lib/utils";
 // import { RequestChangeDialog } from "@/components/request-change-dialog"
 // import { VoteButtons } from "@/components/vote-buttons"
-// import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 export function GamesList() {
-  const filteredGames = [];
-  const paginatedGames: Game[] = [];
+  const filteredGames = [1, 2, 3];
+  const paginatedGames: Game[] = [
+    {
+      id: 1,
+      name: "Game 1",
+      cover: "/placeholder.svg",
+      votes: 10,
+      supportsKeyboard: true,
+      supportsMouse: false,
+    },
+  ];
 
   return (
     <div className="space-y-6">
@@ -34,15 +45,15 @@ export function GamesList() {
           found
         </h2>
         <Button className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="mr-2 h-4 w-4" />
+          <Plus className="mr-2 size-4" />
           Add Game
         </Button>
       </div>
 
       {paginatedGames.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {paginatedGames.map((game) => (
-            <div
+            <li
               key={game.id}
               className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow"
             >
@@ -61,7 +72,12 @@ export function GamesList() {
                   </h3>
                   <TooltipProvider>
                     <Tooltip>
-                      <TooltipTrigger asChild>{game.votes}</TooltipTrigger>
+                      <TooltipTrigger asChild>
+                        <VoteButtons
+                          gameId={game.id}
+                          initialVotes={game.votes}
+                        />
+                      </TooltipTrigger>
                       <TooltipContent>
                         <p>
                           Vote if this game is truly playable with the listed
@@ -75,16 +91,18 @@ export function GamesList() {
                 <div className="flex flex-col gap-2">
                   <div className="flex justify-between items-center">
                     <span
-                      className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getInputSupportColor(
-                        game,
-                      )}`}
+                      className={cn(
+                        "inline-block px-3 py-1 rounded-full text-xs font-medium",
+                        getInputSupportColor(game),
+                      )}
                     >
                       {getInputSupportLabel(game)}
                     </span>
                     <span
-                      className={`text-xs font-medium ${getPlayabilityColor(
-                        game.votes,
-                      )}`}
+                      className={cn(
+                        "text-xs font-medium",
+                        getPlayabilityColor(game.votes),
+                      )}
                     >
                       {getPlayabilityLabel(game.votes)}
                     </span>
@@ -99,22 +117,11 @@ export function GamesList() {
                   </Button>
                 </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : (
-        <div className="text-center py-12 bg-white rounded-xl shadow-sm border border-slate-200">
-          <h3 className="text-lg font-medium mb-2 text-slate-800">
-            No games found
-          </h3>
-          <p className="text-slate-600 mb-4">
-            Try adjusting your search or filters
-          </p>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Missing Game
-          </Button>
-        </div>
+        <EmptyList />
       )}
 
       {/* {totalPages > 1 && <Pagination currentPage={page} totalPages={totalPages} />} */}
