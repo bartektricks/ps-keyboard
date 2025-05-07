@@ -21,27 +21,66 @@ import {
 import { EmptyList } from "./empty-list";
 import { VoteButtons } from "../vote-buttons";
 import { cn } from "@/lib/utils";
+import { Pagination } from "../pagination";
+import { db } from "@/db";
+import { gamesTable } from "@/db/schema";
+import { ilike } from "drizzle-orm";
+import { gameFilterParamsCache } from "@/lib/params/game-filter";
 // import { RequestChangeDialog } from "@/components/request-change-dialog"
 // import { VoteButtons } from "@/components/vote-buttons"
 
-export function GamesList() {
-  const filteredGames = [1, 2, 3];
-  const paginatedGames: Game[] = [
-    {
-      id: 1,
-      name: "Game 1",
-      cover: "/placeholder.svg",
-      votes: 10,
-      supportsKeyboard: true,
-      supportsMouse: false,
-    },
-  ];
+const PAGE_LIMIT = 9;
+
+async function getFilteredGames(
+  query?: string,
+  page?: number,
+): Promise<Game[]> {
+  const offset = page ? (page - 1) * 9 : 0;
+
+  const games = await db
+    .select({
+      id: gamesTable.id,
+      name: gamesTable.name,
+      cover: gamesTable.cover,
+      tags: gamesTable.verifiedTags,
+    })
+    .from(gamesTable)
+    .where(query ? ilike(gamesTable.name, `%${query}%`) : undefined)
+    .limit(PAGE_LIMIT)
+    .offset(offset);
+
+  if (!games) return [];
+
+  return games.map((game) => ({
+    id: game.id,
+    name: game.name,
+    cover: game.cover || "/placeholder.svg",
+    votes: 0, // Placeholder for votes
+    supportsKeyboard: Boolean(game.tags?.includes("supports-keyboard")),
+    supportsMouse: Boolean(game.tags?.includes("supports-mouse")),
+  }));
+}
+
+async function getFilteredGamesCount(query?: string) {
+  return await db.$count(
+    gamesTable,
+    query ? ilike(gamesTable.name, `%${query}%`) : undefined,
+  );
+}
+
+export async function GamesList() {
+  const { q, page } = gameFilterParamsCache.all();
+
+  const totalFilteredGames = await getFilteredGamesCount(q);
+  const paginatedGames = await getFilteredGames(q, 1);
+
+  const totalPages = Math.ceil(totalFilteredGames / PAGE_LIMIT);
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold text-slate-800">
-          {filteredGames.length} {filteredGames.length === 1 ? "game" : "games"}{" "}
+          {totalFilteredGames} {totalFilteredGames === 1 ? "game" : "games"}{" "}
           found
         </h2>
         <Button className="bg-blue-600 hover:bg-blue-700">
@@ -73,10 +112,12 @@ export function GamesList() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <VoteButtons
-                          gameId={game.id}
-                          initialVotes={game.votes}
-                        />
+                        <div>
+                          <VoteButtons
+                            gameId={game.id}
+                            initialVotes={game.votes}
+                          />
+                        </div>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>
@@ -124,7 +165,9 @@ export function GamesList() {
         <EmptyList />
       )}
 
-      {/* {totalPages > 1 && <Pagination currentPage={page} totalPages={totalPages} />} */}
+      {totalPages > 1 && (
+        <Pagination currentPage={page} totalPages={totalPages} />
+      )}
 
       {/* <AddGameDialog open={isAddGameOpen} onOpenChange={setIsAddGameOpen} onAddGame={addGame} /> */}
       {/* {selectedGame && (

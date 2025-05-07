@@ -1,16 +1,18 @@
 import { AdBanner } from "@/components/ad-banner";
 import { GamesList } from "@/components/games-list";
+import { GamesListLoader } from "@/components/games-list/games-list-loader";
 import { SearchFilters } from "@/components/search-filters";
 import { gameFilterParamsCache } from "@/lib/params/game-filter";
 
 import { type SearchParams } from "nuqs/server";
+import { Suspense } from "react";
 
 type PageProps = {
   searchParams: Promise<SearchParams>;
 };
 
 export default async function Home({ searchParams }: PageProps) {
-  await gameFilterParamsCache.parse(searchParams);
+  gameFilterParamsCache.parse(await searchParams);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-slate-50">
@@ -31,7 +33,9 @@ export default async function Home({ searchParams }: PageProps) {
 
         <div className="grid gap-8">
           <SearchFilters />
-          <GamesList />
+          <Suspense fallback={<GamesListLoader />}>
+            <GamesList />
+          </Suspense>
         </div>
       </div>
     </main>

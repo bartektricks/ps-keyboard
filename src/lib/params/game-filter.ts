@@ -1,5 +1,6 @@
 import {
   createSearchParamsCache,
+  createSerializer,
   parseAsInteger,
   parseAsString,
   parseAsStringLiteral,
@@ -14,3 +15,5 @@ export const gameFilterParams = {
 };
 
 export const gameFilterParamsCache = createSearchParamsCache(gameFilterParams);
+
+export const serializeGameFilterParams = createSerializer(gameFilterParams);

@@ -3,6 +3,7 @@ import {
   integer,
   pgEnum,
   pgTable,
+  timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -16,15 +17,23 @@ export const gamesTable = pgTable("games", {
   cover: varchar({ length: 255 }).notNull(),
   verifiedTags: tagsEnum().array(),
   notVerifiedTags: tagsEnum().array(),
-  createdAt: integer().default(Date.now()),
-  updatedAt: integer().default(Date.now()),
+  createdAt: timestamp("createdAt", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updatedAt", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
 });
 
 export const votesTable = pgTable("votes", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   fingerprintId: varchar({ length: 255 }).notNull(),
   isPositive: boolean().notNull(),
-  createdAt: integer().default(Date.now()),
-  updatedAt: integer().default(Date.now()),
+  createdAt: timestamp("createdAt", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updatedAt", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   gameId: integer().references(() => gamesTable.id, { onDelete: "cascade" }),
 });

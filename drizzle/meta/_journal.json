@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1746547387512,
-      "tag": "0000_cold_dust",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1746614609727,
-      "tag": "0001_mysterious_cable",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1746615127378,
-      "tag": "0002_silky_brood",
+      "when": 1746623060334,
+      "tag": "0000_pale_glorian",
       "breakpoints": true
     }
   ]

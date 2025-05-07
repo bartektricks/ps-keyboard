@@ -1,5 +1,5 @@
 {
-  "id": "c7b7834b-c477-4595-9ec1-0d0d1bd7ae8b",
+  "id": "0f12a131-d52d-4ce1-9640-c4cdc4d4ff17",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -65,17 +65,17 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "integer",
+          "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
-          "default": 1746547387505
+          "notNull": true,
+          "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "integer",
+          "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
-          "default": 1746547387505
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -121,17 +121,17 @@
         },
         "createdAt": {
           "name": "createdAt",
-          "type": "integer",
+          "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
-          "default": 1746547387506
+          "notNull": true,
+          "default": "now()"
         },
         "updatedAt": {
           "name": "updatedAt",
-          "type": "integer",
+          "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false,
-          "default": 1746547387506
+          "notNull": true,
+          "default": "now()"
         },
         "gameId": {
           "name": "gameId",
