@@ -1,9 +1,9 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 interface AdBannerProps {
-  className?: string
-  size: "leaderboard" | "rectangle" | "skyscraper" | "banner"
-  slot?: string
+  className?: string;
+  size: "leaderboard" | "rectangle" | "skyscraper" | "banner";
+  slot?: string;
 }
 
 export function AdBanner({ className, size, slot = "default" }: AdBannerProps) {
@@ -13,9 +13,9 @@ export function AdBanner({ className, size, slot = "default" }: AdBannerProps) {
     rectangle: { width: 300, height: 250 },
     skyscraper: { width: 160, height: 600 },
     banner: { width: "100%", height: 90 },
-  }
+  };
 
-  const { width, height } = dimensions[size]
+  const { width, height } = dimensions[size];
 
   return (
     <div
@@ -44,5 +44,5 @@ export function AdBanner({ className, size, slot = "default" }: AdBannerProps) {
         </script>
       */}
     </div>
-  )
+  );
 }

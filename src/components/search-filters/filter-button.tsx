@@ -17,7 +17,7 @@ const filterVariants = cva(
     defaultVariants: {
       active: false,
     },
-  }
+  },
 );
 
 export function FilterButton({

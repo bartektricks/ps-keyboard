@@ -1,6 +1,6 @@
 {
-  "id": "c7b7834b-c477-4595-9ec1-0d0d1bd7ae8b",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "0bca7c52-7aa1-4260-abea-7984b7e27478",
+  "prevId": "c7b7834b-c477-4595-9ec1-0d0d1bd7ae8b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -49,15 +49,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "verifiedTags": {
-          "name": "verifiedTags",
-          "type": "tags[]",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "notVerifiedTags": {
-          "name": "notVerifiedTags",
+        "tags": {
+          "name": "tags",
           "type": "tags[]",
           "typeSchema": "public",
           "primaryKey": false,
@@ -68,14 +61,14 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "default": 1746547387505
+          "default": 1746614606842
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "default": 1746547387505
+          "default": 1746614606842
         }
       },
       "indexes": {},
@@ -124,14 +117,14 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "default": 1746547387506
+          "default": 1746614606842
         },
         "updatedAt": {
           "name": "updatedAt",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
-          "default": 1746547387506
+          "default": 1746614606842
         },
         "gameId": {
           "name": "gameId",

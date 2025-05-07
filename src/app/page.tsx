@@ -1,12 +1,13 @@
 import { AdBanner } from "@/components/ad-banner";
+import { GamesList } from "@/components/games-list";
 import { SearchFilters } from "@/components/search-filters";
 import { gameFilterParamsCache } from "@/lib/params/game-filter";
 
-import { type SearchParams } from 'nuqs/server'
- 
+import { type SearchParams } from "nuqs/server";
+
 type PageProps = {
-  searchParams: Promise<SearchParams>
-}
+  searchParams: Promise<SearchParams>;
+};
 
 export default async function Home({ searchParams }: PageProps) {
   await gameFilterParamsCache.parse(searchParams);
@@ -30,7 +31,7 @@ export default async function Home({ searchParams }: PageProps) {
 
         <div className="grid gap-8">
           <SearchFilters />
-          {/* <GamesList /> */}
+          <GamesList />
         </div>
       </div>
     </main>
