@@ -5,7 +5,13 @@ const nextConfig: NextConfig = {
     reactCompiler: true,
   },
   images: {
-    domains: ["image.api.playstation.com"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'image.api.playstation.com',
+        pathname: '/**',
+      },
+    ],
   },
 };
 
