@@ -1,4 +1,4 @@
-import {createSearchParamsCache, parseAsString, parseAsStringEnum, parseAsStringLiteral} from 'nuqs/server'
+import {createSearchParamsCache, parseAsString, parseAsStringLiteral} from 'nuqs/server'
 
 const filters = ['all', 'keyboard', 'mouse', 'mouse-keyboard'] as const
 
