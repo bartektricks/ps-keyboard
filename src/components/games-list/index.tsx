@@ -1,41 +1,42 @@
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-// import { Pagination } from "@/components/pagination"
-// import { AddGameDialog } from "@/components/add-game-dialog"
-// import { mockGames } from "@/lib/mock-data"
-// import type { Game } from "@/lib/types"
 import Image from "next/image";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+} from "@/components/ui/tooltip";
 import { Game } from "./types";
 import {
   getInputSupportColor,
   getInputSupportLabel,
   getPlayabilityColor,
   getPlayabilityLabel,
+  mapFilterToTags,
 } from "./utils";
 import { EmptyList } from "./empty-list";
-import { VoteButtons } from "../vote-buttons";
+import { VoteButtons } from "@/components/vote-buttons";
 import { cn } from "@/lib/utils";
-import { Pagination } from "../pagination";
+import { Pagination } from "@/components/pagination";
 import { db } from "@/db";
 import { gamesTable } from "@/db/schema";
-import { ilike } from "drizzle-orm";
-import { gameFilterParamsCache } from "@/lib/params/game-filter";
-// import { RequestChangeDialog } from "@/components/request-change-dialog"
-// import { VoteButtons } from "@/components/vote-buttons"
+import { and, arrayContains, ilike } from "drizzle-orm";
+import {
+  gameFilterParams,
+  gameFilterParamsCache,
+} from "@/lib/params/game-filter";
+import { type inferParserType } from "nuqs";
 
 const PAGE_LIMIT = 9;
 
-async function getFilteredGames(
-  query?: string,
-  page?: number,
-): Promise<Game[]> {
+async function getFilteredGames({
+  q,
+  page,
+  filter,
+}: inferParserType<typeof gameFilterParams>): Promise<Game[]> {
   const offset = page ? (page - 1) * 9 : 0;
+  const tags = mapFilterToTags(filter);
 
   const games = await db
     .select({
@@ -45,7 +46,12 @@ async function getFilteredGames(
       tags: gamesTable.verifiedTags,
     })
     .from(gamesTable)
-    .where(query ? ilike(gamesTable.name, `%${query}%`) : undefined)
+    .where(
+      and(
+        tags ? arrayContains(gamesTable.verifiedTags, tags) : undefined,
+        q ? ilike(gamesTable.name, `%${q}%`) : undefined,
+      ),
+    )
     .limit(PAGE_LIMIT)
     .offset(offset);
 
@@ -69,10 +75,11 @@ async function getFilteredGamesCount(query?: string) {
 }
 
 export async function GamesList() {
-  const { q, page } = gameFilterParamsCache.all();
+  const params = gameFilterParamsCache.all();
+  const { q, page } = params;
 
   const totalFilteredGames = await getFilteredGamesCount(q);
-  const paginatedGames = await getFilteredGames(q, 1);
+  const paginatedGames = await getFilteredGames(params);
 
   const totalPages = Math.ceil(totalFilteredGames / PAGE_LIMIT);
 

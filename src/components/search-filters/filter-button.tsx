@@ -31,7 +31,12 @@ export function FilterButton({
   return (
     <Button
       onClick={() => {
-        setParams({ filter });
+        setParams(
+          { filter },
+          {
+            shallow: false,
+          },
+        );
       }}
       className={filterVariants({
         active: params.filter === filter,

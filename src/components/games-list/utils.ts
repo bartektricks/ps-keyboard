@@ -1,4 +1,7 @@
+import { gamesTable } from "@/db/schema";
 import { type Game } from "./types";
+import { type inferParserType } from "nuqs";
+import { gameFilterParams } from "@/lib/params/game-filter";
 
 export const getInputSupportLabel = (game: Game) => {
   if (game.supportsMouse && game.supportsKeyboard) return "Mouse & Keyboard";
@@ -29,4 +32,20 @@ export const getPlayabilityColor = (votes: number) => {
   if (votes >= 0) return "text-amber-500";
   if (votes >= -10) return "text-orange-500";
   return "text-red-500";
+};
+
+export const mapFilterToTags = (
+  filter?: inferParserType<typeof gameFilterParams.filter>,
+): typeof gamesTable.$inferSelect.verifiedTags => {
+  switch (filter) {
+    case "keyboard":
+      return ["supports-keyboard"];
+    case "mouse":
+      return ["supports-mouse"];
+    case "mouse-keyboard":
+      return ["supports-keyboard", "supports-mouse"];
+    case "all":
+    default:
+      return null;
+  }
 };
