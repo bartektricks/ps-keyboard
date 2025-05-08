@@ -10,6 +10,13 @@ export const getInputSupportLabel = (game: Game) => {
   return "Controller Only";
 };
 
+export const getInputSupportValue = (game: Game): string | null => {
+  if (game.supportsMouse && game.supportsKeyboard) return "mouse-keyboard";
+  if (game.supportsMouse) return "mouse";
+  if (game.supportsKeyboard) return "keyboard";
+  return null;
+};
+
 export const getInputSupportColor = (game: Game) => {
   if (game.supportsMouse && game.supportsKeyboard)
     return "bg-green-100 text-green-800";

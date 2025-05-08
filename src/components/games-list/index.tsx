@@ -9,6 +9,7 @@ import {
 import {
   getInputSupportColor,
   getInputSupportLabel,
+  getInputSupportValue,
   getPlayabilityColor,
   getPlayabilityLabel,
 } from "./utils";
@@ -22,6 +23,7 @@ import { getFilteredGamesCount } from "./get-filtered-games-count";
 import { AddGameDialog } from "../add-game-dialog";
 import { Plus } from "lucide-react";
 import { RequestChangesDialog } from "../request-changes-dialog";
+import { Game } from "./types";
 
 export async function GamesList() {
   const params = gameFilterParamsCache.all();
@@ -93,7 +95,7 @@ export async function GamesList() {
                     <span
                       className={cn(
                         "inline-block px-3 py-1 rounded-full text-xs font-medium",
-                        getInputSupportColor(game),
+                        getInputSupportColor(game)
                       )}
                     >
                       {getInputSupportLabel(game)}
@@ -101,7 +103,7 @@ export async function GamesList() {
                     <span
                       className={cn(
                         "text-xs font-medium",
-                        getPlayabilityColor(game.votes),
+                        getPlayabilityColor(game.votes)
                       )}
                     >
                       {getPlayabilityLabel(game.votes)}
@@ -110,7 +112,7 @@ export async function GamesList() {
 
                   <RequestChangesDialog
                     gameTitle={game.name}
-                    initialInputSupport="mouse-keyboard" //TODO update
+                    initialInputSupport={getInputSupportValue(game)} //TODO update
                   >
                     <Button
                       variant="outline"
