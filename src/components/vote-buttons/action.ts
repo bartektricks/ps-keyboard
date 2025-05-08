@@ -5,6 +5,7 @@ import { votesTable } from "@/db/schema";
 import { getHashedUserIpAddress } from "@/lib/get-hashed-user-ip-address";
 import { actionClient } from "@/lib/safe-action";
 import { voteForGameSchema } from "@/lib/schemas/vote-for-game-schema";
+import { eq } from "drizzle-orm";
 import {
   formatValidationErrors,
   returnValidationErrors,
@@ -26,19 +27,31 @@ export const addVote = actionClient
 
     const { gameId, vote } = parsedInput;
 
-    await db
-      .insert(votesTable)
-      .values({
+    const userVote = await db.query.votesTable.findFirst({
+      columns: {
+        id: true,
+      },
+      where: (votesTable, { eq, and }) =>
+        and(
+          eq(votesTable.gameId, gameId),
+          eq(votesTable.fingerprintId, hashedIpAddress),
+        ),
+    });
+
+    if (!userVote) {
+      await db.insert(votesTable).values({
         fingerprintId: hashedIpAddress,
         gameId: gameId,
         vote: vote,
-      })
-      .onConflictDoUpdate({
-        target: [votesTable.fingerprintId],
-        set: {
-          vote: vote,
-        },
       });
+    } else {
+      await db
+        .update(votesTable)
+        .set({
+          vote: vote,
+        })
+        .where(eq(votesTable.id, userVote.id));
+    }
 
     revalidatePath("/");
   });

@@ -17,9 +17,11 @@ import { VoteButtons } from "@/components/vote-buttons";
 import { cn } from "@/lib/utils";
 import { Pagination } from "@/components/pagination";
 import { gameFilterParamsCache } from "@/lib/params/game-filter";
-import { AddGameButton } from "./add-game-button";
 import { getFilteredGames, PAGE_LIMIT } from "./get-filtered-games";
 import { getFilteredGamesCount } from "./get-filtered-games-count";
+import { AddGameDialog } from "../add-game-dialog";
+import { Plus } from "lucide-react";
+import { RequestChangesDialog } from "../request-changes-dialog";
 
 export async function GamesList() {
   const params = gameFilterParamsCache.all();
@@ -37,7 +39,12 @@ export async function GamesList() {
           {totalFilteredGames} {totalFilteredGames === 1 ? "game" : "games"}{" "}
           found
         </h2>
-        <AddGameButton />
+        <AddGameDialog>
+          <Button className="bg-blue-600 hover:bg-blue-700">
+            <Plus className="mr-2 size-4" />
+            Add Game
+          </Button>
+        </AddGameDialog>
       </div>
 
       {paginatedGames.length > 0 ? (
@@ -101,13 +108,18 @@ export async function GamesList() {
                     </span>
                   </div>
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="text-xs border-slate-200 text-slate-600 hover:bg-slate-50 w-full"
+                  <RequestChangesDialog
+                    gameTitle={game.name}
+                    initialInputSupport="mouse-keyboard" //TODO update
                   >
-                    Request Change
-                  </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-xs border-slate-200 text-slate-600 hover:bg-slate-50 w-full"
+                    >
+                      Request Change
+                    </Button>
+                  </RequestChangesDialog>
                 </div>
               </div>
             </li>

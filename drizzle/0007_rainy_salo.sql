@@ -1,0 +1,1 @@
+ALTER TABLE "votes" DROP CONSTRAINT "votes_fingerprintId_unique";

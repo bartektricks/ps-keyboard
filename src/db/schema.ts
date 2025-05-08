@@ -31,7 +31,7 @@ export const gamesTableRelations = relations(gamesTable, ({ many }) => ({
 
 export const votesTable = pgTable("votes", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  fingerprintId: varchar({ length: 255 }).notNull().unique(),
+  fingerprintId: varchar({ length: 255 }).notNull(),
   vote: integer().default(0),
   createdAt: timestamp("createdAt", { withTimezone: true })
     .notNull()

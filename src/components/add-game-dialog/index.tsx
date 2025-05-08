@@ -16,13 +16,10 @@ import { addGameSchema } from "@/lib/schemas/add-game-schema";
 import { addGameAction } from "./action";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
+import { DialogTrigger } from "@radix-ui/react-dialog";
 
-interface AddGameDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-export function AddGameDialog({ open, onOpenChange }: AddGameDialogProps) {
+export function AddGameDialog({ children }: React.PropsWithChildren) {
+  const [open, setOpen] = useState(false);
   const [selectedGame, setSelectedGame] = useState<SelectedGame | null>(null);
   const [inputSupport, setInputSupport] = useState<string>("mouse-keyboard");
   const { execute, isExecuting } = useAction(addGameAction, {
@@ -31,7 +28,7 @@ export function AddGameDialog({ open, onOpenChange }: AddGameDialogProps) {
         richColors: true,
         dismissible: true,
       });
-      onOpenChange(false);
+      setOpen(false);
     },
     onError: (res) => {
       const error =
@@ -66,7 +63,8 @@ export function AddGameDialog({ open, onOpenChange }: AddGameDialogProps) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-slate-800">
