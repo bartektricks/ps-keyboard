@@ -1,7 +1,7 @@
 import { getSearchResults } from "@/lib/api/psn-api/get-search-results";
+import { searchGameSchema } from "@/lib/schemas/search-game-schema";
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requestSchema } from "./schema";
 
 type DesiredGamesResponse = {
   id: string;
@@ -15,7 +15,7 @@ export type SearchSuccessResponse = {
 };
 
 export type SearchErrorResponse = {
-  errors: z.inferFlattenedErrors<typeof requestSchema>["fieldErrors"];
+  errors: z.inferFlattenedErrors<typeof searchGameSchema>["fieldErrors"];
 };
 
 type SearchResponse =
@@ -24,7 +24,7 @@ type SearchResponse =
 
 export async function POST(request: Request): Promise<SearchResponse> {
   const body = await request.json();
-  const parsedBody = requestSchema.safeParse(body);
+  const parsedBody = searchGameSchema.safeParse(body);
 
   if (!parsedBody.success) {
     return NextResponse.json(

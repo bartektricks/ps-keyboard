@@ -17,11 +17,7 @@ export function AddGameButton() {
         <Plus className="mr-2 size-4" />
         Add Game
       </Button>
-      <AddGameDialog
-        open={isOpen}
-        onAddGame={(x) => console.log(x)}
-        onOpenChange={setIsOpen}
-      />
+      <AddGameDialog open={isOpen} onOpenChange={setIsOpen} />
     </>
   );
 }

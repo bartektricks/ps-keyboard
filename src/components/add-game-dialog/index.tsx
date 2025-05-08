@@ -11,46 +11,46 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { type Game } from "../games-list/types";
-import { GameCombobox } from "./game-combobox";
-
-type InsertGame = Omit<Game, "id" | "votes">;
+import { GameCombobox, SelectedGame } from "./game-combobox";
+import { addGameSchema } from "@/lib/schemas/add-game-schema";
+import { addGameAction } from "./action";
+import { useAction } from "next-safe-action/hooks";
 
 interface AddGameDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onAddGame: (game: InsertGame) => void;
 }
 
-export function AddGameDialog({
-  open,
-  onOpenChange,
-  onAddGame,
-}: AddGameDialogProps) {
-  const [selectedGame, setSelectedGame] = useState<string | null>(null);
+export function AddGameDialog({ open, onOpenChange }: AddGameDialogProps) {
+  const [selectedGame, setSelectedGame] = useState<SelectedGame | null>(null);
   const [inputSupport, setInputSupport] = useState<string>("mouse-keyboard");
+  const { execute } = useAction(addGameAction, {
+    onSuccess: () => {
+      onOpenChange(false);
+    },
+    onError: (res) => {
+      console.log(res.error.validationErrors);
+    },
+  });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!selectedGame) return;
 
-    const newGame: InsertGame = {
-      name: selectedGame,
-      supportsMouse:
-        inputSupport === "mouse-keyboard" || inputSupport === "mouse",
-      supportsKeyboard:
-        inputSupport === "mouse-keyboard" || inputSupport === "keyboard",
-      cover: "/placeholder.svg?height=300&width=200",
+    const newGame = {
+      ...selectedGame,
+      supportType: inputSupport,
     };
 
-    onAddGame(newGame);
-    resetForm();
-  };
+    const parsedSchema = addGameSchema.safeParse(newGame);
 
-  const resetForm = () => {
-    setSelectedGame(null);
-    setInputSupport("mouse-keyboard");
+    if (!parsedSchema.success) {
+      console.error(parsedSchema.error);
+      return;
+    }
+
+    execute(parsedSchema.data);
   };
 
   return (
@@ -80,45 +80,15 @@ export function AddGameDialog({
               onValueChange={setInputSupport}
               className="space-y-2"
             >
-              <div className="flex items-center space-x-2 rounded-md border border-slate-200 p-3">
-                <RadioGroupItem
-                  value="mouse-keyboard"
-                  id="mouse-keyboard"
-                  className="border-blue-600 text-blue-600"
-                />
-                <Label
-                  htmlFor="mouse-keyboard"
-                  className="font-medium text-slate-700 cursor-pointer"
-                >
-                  Mouse & Keyboard
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 rounded-md border border-slate-200 p-3">
-                <RadioGroupItem
-                  value="keyboard"
-                  id="keyboard"
-                  className="border-blue-600 text-blue-600"
-                />
-                <Label
-                  htmlFor="keyboard"
-                  className="font-medium text-slate-700 cursor-pointer"
-                >
-                  Keyboard Only
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 rounded-md border border-slate-200 p-3">
-                <RadioGroupItem
-                  value="mouse"
-                  id="mouse"
-                  className="border-blue-600 text-blue-600"
-                />
-                <Label
-                  htmlFor="mouse"
-                  className="font-medium text-slate-700 cursor-pointer"
-                >
-                  Mouse Only
-                </Label>
-              </div>
+              <RadioInput value="mouse-keyboard">
+                <span>Mouse & Keyboard</span>
+              </RadioInput>
+              <RadioInput value="mouse">
+                <span>Mouse Only</span>
+              </RadioInput>
+              <RadioInput value="keyboard">
+                <span>Keyboard Only</span>
+              </RadioInput>
             </RadioGroup>
           </div>
 
@@ -134,5 +104,24 @@ export function AddGameDialog({
         </form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function RadioInput({
+  value,
+  children,
+}: React.PropsWithChildren<{ value: string }>) {
+  return (
+    <Label
+      htmlFor={value}
+      className="font-medium text-slate-700 cursor-pointer flex items-center space-x-2 rounded-md border border-slate-200 p-3"
+    >
+      <RadioGroupItem
+        value={value}
+        id={value}
+        className="border-blue-600 text-blue-600"
+      />
+      {children}
+    </Label>
   );
 }

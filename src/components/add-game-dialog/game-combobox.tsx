@@ -18,10 +18,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useGetSearchResults } from "@/lib/hooks/queries/use-get-search-results";
+import { SearchSuccessResponse } from "@/app/api/v1/psn/search/route";
+
+export type SelectedGame = SearchSuccessResponse["games"][number];
 
 interface GameComboboxProps {
-  selectedGame: string | null;
-  onSelect: (value: string | null) => void;
+  selectedGame: SelectedGame | null;
+  onSelect: (value: SelectedGame | null) => void;
 }
 
 export function GameCombobox({ selectedGame, onSelect }: GameComboboxProps) {
@@ -41,7 +44,7 @@ export function GameCombobox({ selectedGame, onSelect }: GameComboboxProps) {
             aria-expanded={open}
             className="w-full justify-between border-slate-200"
           >
-            {selectedGame || "Search for a game..."}
+            {selectedGame?.title || "Search for a game..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -72,7 +75,7 @@ export function GameCombobox({ selectedGame, onSelect }: GameComboboxProps) {
                     key={game.id}
                     value={game.title}
                     onSelect={() => {
-                      onSelect(game.title);
+                      onSelect(game);
                       setOpen(false);
                     }}
                   >
