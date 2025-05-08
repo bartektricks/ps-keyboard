@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetGameFilterParams } from "@/hooks/useGetGameFilterParams";
+import { useGetGameFilterParams } from "@/lib/hooks/use-get-game-filter-params";
 import { serializeGameFilterParams } from "@/lib/params/game-filter";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, LucideIcon } from "lucide-react";

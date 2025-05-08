@@ -7,9 +7,9 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'image.api.playstation.com',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "image.api.playstation.com",
+        pathname: "/**",
       },
     ],
   },

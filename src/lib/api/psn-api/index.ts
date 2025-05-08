@@ -5,7 +5,7 @@ import {
   exchangeNpssoForAccessCode,
 } from "psn-api";
 
-const psnApi = axios.create({
+export const psnApi = axios.create({
   baseURL: "https://m.np.playstation.com/api/graphql/v1",
   headers: {
     "content-type": "application/json",
@@ -25,8 +25,3 @@ psnApi.interceptors.request.use(
   },
   (error) => Promise.reject(error),
 );
-
-export const getSearchResults = (searchTerm: string) =>
-  psnApi.get(
-    `/op?operationName=metGetContextSearchResults&variables={"searchTerm":"${searchTerm}","searchContext":"MobileUniversalSearchGame","displayTitleLocale":"en-US"}&extensions={"persistedQuery":{"version":1,"sha256Hash":"ac5fb2b82c4d086ca0d272fba34418ab327a7762dd2cd620e63f175bbc5aff10"}}`,
-  );

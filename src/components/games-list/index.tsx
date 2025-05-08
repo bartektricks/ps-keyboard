@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import Image from "next/image";
 import {
   Tooltip,
@@ -7,72 +6,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Game } from "./types";
 import {
   getInputSupportColor,
   getInputSupportLabel,
   getPlayabilityColor,
   getPlayabilityLabel,
-  mapFilterToTags,
 } from "./utils";
 import { EmptyList } from "./empty-list";
 import { VoteButtons } from "@/components/vote-buttons";
 import { cn } from "@/lib/utils";
 import { Pagination } from "@/components/pagination";
-import { db } from "@/db";
-import { gamesTable } from "@/db/schema";
-import { and, arrayContains, ilike } from "drizzle-orm";
-import {
-  gameFilterParams,
-  gameFilterParamsCache,
-} from "@/lib/params/game-filter";
-import { type inferParserType } from "nuqs";
-
-const PAGE_LIMIT = 9;
-
-async function getFilteredGames({
-  q,
-  page,
-  filter,
-}: inferParserType<typeof gameFilterParams>): Promise<Game[]> {
-  const offset = page ? (page - 1) * 9 : 0;
-  const tags = mapFilterToTags(filter);
-
-  const games = await db
-    .select({
-      id: gamesTable.id,
-      name: gamesTable.name,
-      cover: gamesTable.cover,
-      tags: gamesTable.verifiedTags,
-    })
-    .from(gamesTable)
-    .where(
-      and(
-        tags ? arrayContains(gamesTable.verifiedTags, tags) : undefined,
-        q ? ilike(gamesTable.name, `%${q}%`) : undefined,
-      ),
-    )
-    .limit(PAGE_LIMIT)
-    .offset(offset);
-
-  if (!games) return [];
-
-  return games.map((game) => ({
-    id: game.id,
-    name: game.name,
-    cover: game.cover || "/placeholder.svg",
-    votes: 0, // Placeholder for votes
-    supportsKeyboard: Boolean(game.tags?.includes("supports-keyboard")),
-    supportsMouse: Boolean(game.tags?.includes("supports-mouse")),
-  }));
-}
-
-async function getFilteredGamesCount(query?: string) {
-  return await db.$count(
-    gamesTable,
-    query ? ilike(gamesTable.name, `%${query}%`) : undefined,
-  );
-}
+import { gameFilterParamsCache } from "@/lib/params/game-filter";
+import { AddGameButton } from "./add-game-button";
+import { getFilteredGames, PAGE_LIMIT } from "./get-filtered-games";
+import { getFilteredGamesCount } from "./get-filtered-games-count";
 
 export async function GamesList() {
   const params = gameFilterParamsCache.all();
@@ -90,10 +37,7 @@ export async function GamesList() {
           {totalFilteredGames} {totalFilteredGames === 1 ? "game" : "games"}{" "}
           found
         </h2>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="mr-2 size-4" />
-          Add Game
-        </Button>
+        <AddGameButton />
       </div>
 
       {paginatedGames.length > 0 ? (
@@ -176,7 +120,6 @@ export async function GamesList() {
         <Pagination currentPage={page} totalPages={totalPages} />
       )}
 
-      {/* <AddGameDialog open={isAddGameOpen} onOpenChange={setIsAddGameOpen} onAddGame={addGame} /> */}
       {/* {selectedGame && (
         <RequestChangeDialog
           open={isRequestChangeOpen}
