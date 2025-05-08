@@ -15,6 +15,7 @@ import { GameCombobox, SelectedGame } from "./game-combobox";
 import { addGameSchema } from "@/lib/schemas/add-game-schema";
 import { addGameAction } from "./action";
 import { useAction } from "next-safe-action/hooks";
+import { toast } from "sonner";
 
 interface AddGameDialogProps {
   open: boolean;
@@ -26,10 +27,21 @@ export function AddGameDialog({ open, onOpenChange }: AddGameDialogProps) {
   const [inputSupport, setInputSupport] = useState<string>("mouse-keyboard");
   const { execute } = useAction(addGameAction, {
     onSuccess: () => {
+      toast.success("Game added successfully", {
+        richColors: true,
+        dismissible: true,
+      });
       onOpenChange(false);
     },
     onError: (res) => {
-      console.log(res.error.validationErrors);
+      const error =
+        res.error.validationErrors?.formErrors.join(", ") ||
+        "Something went wrong";
+
+      toast.error(error, {
+        richColors: true,
+        dismissible: true,
+      });
     },
   });
 
