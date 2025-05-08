@@ -3,7 +3,15 @@ import { Game } from "./types";
 import { mapFilterToTags } from "./utils";
 import { db } from "@/db";
 import { gamesTable } from "@/db/schema";
-import { and, arrayContains, ilike } from "drizzle-orm";
+import {
+  and,
+  arrayContained,
+  arrayContains,
+  arrayOverlaps,
+  eq,
+  ilike,
+  inArray,
+} from "drizzle-orm";
 import { gameFilterParams } from "@/lib/params/game-filter";
 import { type inferParserType } from "nuqs";
 
@@ -27,9 +35,9 @@ export async function getFilteredGames({
     .from(gamesTable)
     .where(
       and(
-        tags ? arrayContains(gamesTable.verifiedTags, tags) : undefined,
-        q ? ilike(gamesTable.name, `%${q}%`) : undefined,
-      ),
+        tags ? eq(gamesTable.verifiedTags, tags) : undefined,
+        q ? ilike(gamesTable.name, `%${q}%`) : undefined
+      )
     )
     .limit(PAGE_LIMIT)
     .offset(offset);
