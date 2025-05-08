@@ -5,4 +5,5 @@ export interface Game {
   votes: number;
   supportsMouse: boolean;
   supportsKeyboard: boolean;
+  voted: number | null;
 }

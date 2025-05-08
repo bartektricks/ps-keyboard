@@ -1,0 +1,1 @@
+ALTER TABLE "votes" ADD CONSTRAINT "votes_gameId_games_id_fk" FOREIGN KEY ("gameId") REFERENCES "public"."games"("id") ON DELETE no action ON UPDATE no action;

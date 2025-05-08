@@ -8,6 +8,48 @@
       "when": 1746623060334,
       "tag": "0000_pale_glorian",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1746693210384,
+      "tag": "0001_special_mac_gargan",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1746693383051,
+      "tag": "0002_magical_mercury",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1746693972361,
+      "tag": "0003_nappy_iron_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1746694027352,
+      "tag": "0004_sweet_mysterio",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1746697761154,
+      "tag": "0005_lyrical_ultragirl",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1746698229838,
+      "tag": "0006_jittery_shen",
+      "breakpoints": true
     }
   ]
 }

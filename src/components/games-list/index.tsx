@@ -67,6 +67,7 @@ export async function GamesList() {
                           <VoteButtons
                             gameId={game.id}
                             initialVotes={game.votes}
+                            initialVote={game.voted}
                           />
                         </div>
                       </TooltipTrigger>
@@ -85,7 +86,7 @@ export async function GamesList() {
                     <span
                       className={cn(
                         "inline-block px-3 py-1 rounded-full text-xs font-medium",
-                        getInputSupportColor(game)
+                        getInputSupportColor(game),
                       )}
                     >
                       {getInputSupportLabel(game)}
@@ -93,7 +94,7 @@ export async function GamesList() {
                     <span
                       className={cn(
                         "text-xs font-medium",
-                        getPlayabilityColor(game.votes)
+                        getPlayabilityColor(game.votes),
                       )}
                     >
                       {getPlayabilityLabel(game.votes)}

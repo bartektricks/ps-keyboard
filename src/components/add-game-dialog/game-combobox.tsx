@@ -37,7 +37,7 @@ export function GameCombobox({ selectedGame, onSelect }: GameComboboxProps) {
     execute({
       search: debouncedQuery,
     });
-  }, [debouncedQuery]);
+  }, [debouncedQuery, execute]);
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal={true}>

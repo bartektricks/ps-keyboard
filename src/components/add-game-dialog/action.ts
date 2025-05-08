@@ -13,7 +13,7 @@ import {
 import { revalidatePath } from "next/cache";
 
 function getTags(
-  value: string
+  value: string,
 ): typeof gamesTable.$inferSelect.notVerifiedTags {
   switch (value) {
     case "mouse-keyboard":
@@ -80,7 +80,7 @@ export const searchGameAction = actionClient
     const { data } = await getSearchResults(parsedInput.search);
 
     const gamesResponse = data.data.universalContextSearch.results.find(
-      (res) => res.domain === "MobileGames"
+      (res) => res.domain === "MobileGames",
     );
 
     if (!gamesResponse) {
@@ -91,7 +91,7 @@ export const searchGameAction = actionClient
       (res) => {
         const media =
           res.result.media.find(
-            (media) => media.role === "GAMEHUB_COVER_ART"
+            (media) => media.role === "GAMEHUB_COVER_ART",
           ) || res.result.media[0];
 
         return {
@@ -99,7 +99,7 @@ export const searchGameAction = actionClient
           title: res.result.invariantName,
           cover: media.url,
         };
-      }
+      },
     );
 
     return {

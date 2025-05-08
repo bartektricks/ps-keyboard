@@ -1,0 +1,1 @@
+ALTER TABLE "votes" ALTER COLUMN "vote" SET DATA TYPE integer;
