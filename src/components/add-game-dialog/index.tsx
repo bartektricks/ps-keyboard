@@ -25,7 +25,7 @@ interface AddGameDialogProps {
 export function AddGameDialog({ open, onOpenChange }: AddGameDialogProps) {
   const [selectedGame, setSelectedGame] = useState<SelectedGame | null>(null);
   const [inputSupport, setInputSupport] = useState<string>("mouse-keyboard");
-  const { execute } = useAction(addGameAction, {
+  const { execute, isExecuting } = useAction(addGameAction, {
     onSuccess: () => {
       toast.success("Game added successfully", {
         richColors: true,
@@ -107,7 +107,7 @@ export function AddGameDialog({ open, onOpenChange }: AddGameDialogProps) {
           <DialogFooter>
             <Button
               type="submit"
-              disabled={!selectedGame}
+              disabled={!selectedGame || isExecuting}
               className="bg-blue-600 hover:bg-blue-700 w-full"
             >
               Add Game

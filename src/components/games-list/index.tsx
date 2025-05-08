@@ -45,7 +45,7 @@ export async function GamesList() {
           {paginatedGames.map((game) => (
             <li
               key={game.id}
-              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow"
+              className="bg-white rounded-xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-md transition-shadow flex flex-col"
             >
               <div className="relative h-40 w-full">
                 <Image
@@ -55,7 +55,7 @@ export async function GamesList() {
                   fill
                 />
               </div>
-              <div className="p-4">
+              <div className="p-4 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="font-medium text-lg text-slate-800">
                     {game.name}
@@ -80,12 +80,12 @@ export async function GamesList() {
                   </TooltipProvider>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-2 justify-between flex-1">
+                  <div className="flex justify-between items-center mb-2">
                     <span
                       className={cn(
                         "inline-block px-3 py-1 rounded-full text-xs font-medium",
-                        getInputSupportColor(game),
+                        getInputSupportColor(game)
                       )}
                     >
                       {getInputSupportLabel(game)}
@@ -93,7 +93,7 @@ export async function GamesList() {
                     <span
                       className={cn(
                         "text-xs font-medium",
-                        getPlayabilityColor(game.votes),
+                        getPlayabilityColor(game.votes)
                       )}
                     >
                       {getPlayabilityLabel(game.votes)}
@@ -103,7 +103,7 @@ export async function GamesList() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-xs border-slate-200 text-slate-600 hover:bg-slate-50 w-full mt-2"
+                    className="text-xs border-slate-200 text-slate-600 hover:bg-slate-50 w-full"
                   >
                     Request Change
                   </Button>
