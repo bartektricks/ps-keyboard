@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDebounceValue } from "usehooks-ts";
@@ -17,10 +17,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useGetSearchResults } from "@/lib/hooks/queries/use-get-search-results";
-import { SearchSuccessResponse } from "@/app/api/v1/psn/search/route";
+import { DesiredGamesResponse, searchGameAction } from "./action";
+import { useAction } from "next-safe-action/hooks";
 
-export type SelectedGame = SearchSuccessResponse["games"][number];
+export type SelectedGame = DesiredGamesResponse[number];
 
 interface GameComboboxProps {
   selectedGame: SelectedGame | null;
@@ -31,8 +31,13 @@ export function GameCombobox({ selectedGame, onSelect }: GameComboboxProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery] = useDebounceValue(searchQuery, 500);
+  const { execute, result, isExecuting } = useAction(searchGameAction);
 
-  const { data, isFetching, error } = useGetSearchResults(debouncedQuery);
+  useEffect(() => {
+    execute({
+      search: debouncedQuery,
+    });
+  }, [debouncedQuery]);
 
   return (
     <Popover open={open} onOpenChange={setOpen} modal={true}>
@@ -56,7 +61,7 @@ export function GameCombobox({ selectedGame, onSelect }: GameComboboxProps) {
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
-          {isFetching ? (
+          {isExecuting ? (
             <div className="py-6 text-center text-sm text-slate-500">
               Searching...
             </div>
@@ -64,13 +69,13 @@ export function GameCombobox({ selectedGame, onSelect }: GameComboboxProps) {
             <CommandList>
               <CommandEmpty>
                 <span className="px-4">
-                  {error?.response?.data.errors.search?.join(", ") ||
+                  {result.validationErrors?.fieldErrors.search?.join(", ") ||
                     "No games found"}
                 </span>
               </CommandEmpty>
 
               <CommandGroup>
-                {data?.games.map((game) => (
+                {result.data?.games.map((game) => (
                   <CommandItem
                     key={game.id}
                     value={game.title}

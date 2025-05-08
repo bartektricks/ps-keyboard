@@ -2,8 +2,10 @@
 
 import { db } from "@/db";
 import { gamesTable } from "@/db/schema";
+import { getSearchResults } from "@/lib/api/psn-api/get-search-results";
 import { actionClient } from "@/lib/safe-action";
 import { addGameSchema } from "@/lib/schemas/add-game-schema";
+import { searchGameSchema } from "@/lib/schemas/search-game-schema";
 import {
   flattenValidationErrors,
   returnValidationErrors,
@@ -11,7 +13,7 @@ import {
 import { revalidatePath } from "next/cache";
 
 function getTags(
-  value: string,
+  value: string
 ): typeof gamesTable.$inferSelect.notVerifiedTags {
   switch (value) {
     case "mouse-keyboard":
@@ -62,4 +64,46 @@ export const addGameAction = actionClient
         _errors: ["Failed to add game"],
       });
     }
+  });
+
+export type DesiredGamesResponse = {
+  id: string;
+  title: string;
+  cover: string;
+}[];
+
+export const searchGameAction = actionClient
+  .schema(searchGameSchema, {
+    handleValidationErrorsShape: async (v) => flattenValidationErrors(v),
+  })
+  .action(async ({ parsedInput }) => {
+    const { data } = await getSearchResults(parsedInput.search);
+
+    const gamesResponse = data.data.universalContextSearch.results.find(
+      (res) => res.domain === "MobileGames"
+    );
+
+    if (!gamesResponse) {
+      return { count: 0, games: [] };
+    }
+
+    const games: DesiredGamesResponse = gamesResponse.searchResults.map(
+      (res) => {
+        const media =
+          res.result.media.find(
+            (media) => media.role === "GAMEHUB_COVER_ART"
+          ) || res.result.media[0];
+
+        return {
+          id: res.id,
+          title: res.result.invariantName,
+          cover: media.url,
+        };
+      }
+    );
+
+    return {
+      count: gamesResponse.totalResultCount,
+      games,
+    };
   });
