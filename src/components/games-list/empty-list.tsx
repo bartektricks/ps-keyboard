@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { AddGameDialog } from "../add-game-dialog";
 
 export function EmptyList() {
   return (
@@ -10,10 +11,12 @@ export function EmptyList() {
       <p className="text-slate-600 mb-4">
         Try adjusting your search or filters
       </p>
-      <Button className="bg-blue-600 hover:bg-blue-700">
-        <Plus className="mr-2 h-4 w-4" />
-        Add Missing Game
-      </Button>
+      <AddGameDialog>
+        <Button className="bg-blue-600 hover:bg-blue-700">
+          <Plus className="mr-2 h-4 w-4" />
+          Add Game
+        </Button>
+      </AddGameDialog>
     </div>
   );
 }
