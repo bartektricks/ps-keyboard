@@ -1,4 +1,3 @@
-import { AdBanner } from "@/components/ad-banner";
 import { GamesList } from "@/components/games-list";
 import { GamesListLoader } from "@/components/games-list/games-list-loader";
 import { SearchFilters } from "@/components/search-filters";
