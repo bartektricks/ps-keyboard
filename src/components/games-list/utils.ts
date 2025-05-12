@@ -18,7 +18,7 @@ export const getInputSupportValue = (game: Game): string | null => {
 };
 
 export const getInputSupportColor = (game: Game) => {
-  if (game.tags?.includes("mouse") && game.tags?.includes("keyboard"))
+  if (game.tags?.includes("mouse-keyboard"))
     return "bg-green-100 text-green-800";
   if (game.tags?.includes("mouse")) return "bg-blue-100 text-blue-800";
   if (game.tags?.includes("keyboard")) return "bg-purple-100 text-purple-800";
