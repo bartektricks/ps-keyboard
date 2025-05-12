@@ -24,10 +24,7 @@ export function AddGameDialog({ children }: React.PropsWithChildren) {
   const [inputSupport, setInputSupport] = useState<string>("mouse-keyboard");
   const { execute, isExecuting } = useAction(addGameAction, {
     onSuccess: () => {
-      toast.success("Game added successfully", {
-        richColors: true,
-        dismissible: true,
-      });
+      toast.success("Game added successfully");
       setOpen(false);
     },
     onError: (res) => {
@@ -35,10 +32,7 @@ export function AddGameDialog({ children }: React.PropsWithChildren) {
         res.error.validationErrors?.formErrors.join(", ") ||
         "Something went wrong";
 
-      toast.error(error, {
-        richColors: true,
-        dismissible: true,
-      });
+      toast.error(error);
     },
   });
 

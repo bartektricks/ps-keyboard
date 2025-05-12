@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   integer,
   pgEnum,
@@ -7,7 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const tagsEnum = pgEnum("tags", ["supports-keyboard", "supports-mouse"]);
+export const tagsEnum = pgEnum("tags", ["keyboard", "mouse", "mouse-keyboard"]);
 
 export const gamesTable = pgTable("games", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -17,12 +17,13 @@ export const gamesTable = pgTable("games", {
   cover: varchar({ length: 255 }).notNull(),
   verifiedTags: tagsEnum().array(),
   notVerifiedTags: tagsEnum().array(),
-  createdAt: timestamp("createdAt", { withTimezone: true })
+  createdAt: timestamp("createdAt", { withTimezone: true, mode: "string" })
     .notNull()
     .defaultNow(),
-  updatedAt: timestamp("updatedAt", { withTimezone: true })
+  updatedAt: timestamp("updatedAt", { withTimezone: true, mode: "string" })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdate(() => sql`now()`),
 });
 
 export const gamesTableRelations = relations(gamesTable, ({ many }) => ({
@@ -33,12 +34,13 @@ export const votesTable = pgTable("votes", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   fingerprintId: varchar({ length: 255 }).notNull(),
   vote: integer().default(0),
-  createdAt: timestamp("createdAt", { withTimezone: true })
+  createdAt: timestamp("createdAt", { withTimezone: true, mode: "string" })
     .notNull()
     .defaultNow(),
-  updatedAt: timestamp("updatedAt", { withTimezone: true })
+  updatedAt: timestamp("updatedAt", { withTimezone: true, mode: "string" })
     .notNull()
-    .defaultNow(),
+    .defaultNow()
+    .$onUpdate(() => sql`now()`),
   gameId: integer()
     .notNull()
     .references(() => gamesTable.id),

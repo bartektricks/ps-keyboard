@@ -12,28 +12,58 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { DialogTrigger } from "@radix-ui/react-dialog";
+import { useAction } from "next-safe-action/hooks";
+import { requestChangesAction } from "./action";
+import { toast } from "sonner";
+import { requestChangesSchema } from "@/lib/schemas/request-changes-schema";
 
 interface RequestChangesDialogProps {
+  gameId: number;
   gameTitle: string;
   initialInputSupport: string | null;
 }
 
 export function RequestChangesDialog({
+  gameId,
   gameTitle,
   initialInputSupport,
   children,
 }: React.PropsWithChildren<RequestChangesDialogProps>) {
-  const [inputSupport, setInputSupport] = useState<string | null>(initialInputSupport);
+  const [open, setOpen] = useState(false);
+  const [inputSupport, setInputSupport] = useState<string | null>(
+    initialInputSupport,
+  );
+  const { execute, isExecuting } = useAction(requestChangesAction, {
+    onSuccess: () => {
+      toast.success("Changes requested successfuly");
+      setOpen(false);
+    },
+    onError: (res) => {
+      const error =
+        res.error.validationErrors?.formErrors.join(", ") ||
+        "Something went wrong";
 
-  const isExecuting = false; // Replace with actual loading state if needed
+      toast.error(error);
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting changes for game:", gameTitle);
+
+    const parsedSchema = requestChangesSchema.safeParse({
+      id: gameId,
+      supportType: inputSupport,
+    });
+
+    if (!parsedSchema.success) {
+      return toast.error("Invalid input");
+    }
+
+    execute(parsedSchema.data);
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px]">

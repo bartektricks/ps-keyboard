@@ -57,8 +57,7 @@ export async function getFilteredGames({
     name: game.name,
     cover: game.cover || "/placeholder.svg",
     votes: game.votes || 0,
-    supportsKeyboard: Boolean(game.tags?.includes("supports-keyboard")),
-    supportsMouse: Boolean(game.tags?.includes("supports-mouse")),
+    tags: game.tags || [],
     voted: votes?.find((vote) => vote.gameId === game.id)?.voted || null,
   }));
 }

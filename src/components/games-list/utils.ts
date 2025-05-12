@@ -4,24 +4,24 @@ import { type inferParserType } from "nuqs";
 import { gameFilterParams } from "@/lib/params/game-filter";
 
 export const getInputSupportLabel = (game: Game) => {
-  if (game.supportsMouse && game.supportsKeyboard) return "Mouse & Keyboard";
-  if (game.supportsMouse) return "Mouse Only";
-  if (game.supportsKeyboard) return "Keyboard Only";
+  if (game.tags?.includes("mouse-keyboard")) return "Mouse & Keyboard";
+  if (game.tags?.includes("mouse")) return "Mouse Only";
+  if (game.tags?.includes("keyboard")) return "Keyboard Only";
   return "Controller Only";
 };
 
 export const getInputSupportValue = (game: Game): string | null => {
-  if (game.supportsMouse && game.supportsKeyboard) return "mouse-keyboard";
-  if (game.supportsMouse) return "mouse";
-  if (game.supportsKeyboard) return "keyboard";
+  if (game.tags?.includes("mouse-keyboard")) return "mouse-keyboard";
+  if (game.tags?.includes("mouse")) return "mouse";
+  if (game.tags?.includes("keyboard")) return "keyboard";
   return null;
 };
 
 export const getInputSupportColor = (game: Game) => {
-  if (game.supportsMouse && game.supportsKeyboard)
+  if (game.tags?.includes("mouse") && game.tags?.includes("keyboard"))
     return "bg-green-100 text-green-800";
-  if (game.supportsMouse) return "bg-blue-100 text-blue-800";
-  if (game.supportsKeyboard) return "bg-purple-100 text-purple-800";
+  if (game.tags?.includes("mouse")) return "bg-blue-100 text-blue-800";
+  if (game.tags?.includes("keyboard")) return "bg-purple-100 text-purple-800";
   return "bg-slate-100 text-slate-800";
 };
 
@@ -46,11 +46,9 @@ export const mapFilterToTags = (
 ): typeof gamesTable.$inferSelect.verifiedTags => {
   switch (filter) {
     case "keyboard":
-      return ["supports-keyboard"];
     case "mouse":
-      return ["supports-mouse"];
     case "mouse-keyboard":
-      return ["supports-keyboard", "supports-mouse"];
+      return [filter];
     case "all":
     default:
       return null;

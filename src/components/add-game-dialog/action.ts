@@ -12,21 +12,6 @@ import {
 } from "next-safe-action";
 import { revalidatePath } from "next/cache";
 
-function getTags(
-  value: string,
-): typeof gamesTable.$inferSelect.notVerifiedTags {
-  switch (value) {
-    case "mouse-keyboard":
-      return ["supports-keyboard", "supports-mouse"];
-    case "mouse":
-      return ["supports-mouse"];
-    case "keyboard":
-      return ["supports-keyboard"];
-    default:
-      return [];
-  }
-}
-
 export const addGameAction = actionClient
   .schema(addGameSchema, {
     handleValidationErrorsShape: async (v) => flattenValidationErrors(v),
@@ -53,7 +38,7 @@ export const addGameAction = actionClient
         slug: title.toLowerCase().replace(/\s+/g, "-"),
         psnGameId: id,
         cover: cover,
-        verifiedTags: getTags(supportType),
+        verifiedTags: [supportType],
       });
       revalidatePath("/");
       return {

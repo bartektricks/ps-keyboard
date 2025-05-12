@@ -1,0 +1,2 @@
+ALTER TABLE "games" ALTER COLUMN "verifiedTags" SET DATA TYPE "public"."tags"[] USING "verifiedTags"::text::"public"."tags"[];--> statement-breakpoint
+ALTER TABLE "games" ALTER COLUMN "notVerifiedTags" SET DATA TYPE "public"."tags"[] USING "notVerifiedTags"::text::"public"."tags"[];

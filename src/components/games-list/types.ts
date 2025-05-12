@@ -1,9 +1,10 @@
+import { gamesTable } from "@/db/schema";
+
 export interface Game {
   id: number;
   name: string;
   cover: string;
   votes: number;
-  supportsMouse: boolean;
-  supportsKeyboard: boolean;
+  tags: typeof gamesTable.$inferSelect.verifiedTags | null;
   voted: number | null;
 }
