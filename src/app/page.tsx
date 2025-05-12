@@ -27,9 +27,9 @@ export default async function Home({ searchParams }: PageProps) {
         </header>
 
         {/* Top leaderboard ad - only ad on the page */}
-        <div className="flex justify-center mb-8">
+        {/* <div className="flex justify-center mb-8">
           <AdBanner size="leaderboard" slot="top-leaderboard" />
-        </div>
+        </div> */}
 
         <div className="grid gap-8">
           <SearchFilters />
