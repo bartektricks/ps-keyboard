@@ -64,7 +64,7 @@ export async function GamesList() {
                 />
               </div>
               <div className="p-4 flex-1 flex flex-col">
-                <div className="flex justify-between items-start mb-2">
+                <div className="flex justify-between items-start mb-2 gap-2">
                   <h3 className="font-medium text-lg text-slate-800">
                     {game.name}
                   </h3>
