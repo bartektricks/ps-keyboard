@@ -26,8 +26,7 @@ export async function getFilteredGames({
       name: gamesTable.name,
       cover: gamesTable.cover,
       tags: gamesTable.verifiedTags,
-      votes: sql<number>`sum(${votesTable.vote})`,
-      voted: votesTable.vote,
+      votes: sql<number>`COALESCE(sum(${votesTable.vote}), 0)`,
     })
     .from(gamesTable)
     .leftJoin(votesTable, eq(gamesTable.id, votesTable.gameId))
@@ -37,7 +36,7 @@ export async function getFilteredGames({
         q ? ilike(gamesTable.name, `%${q}%`) : undefined,
       ),
     )
-    .groupBy(gamesTable.id, votesTable.vote)
+    .groupBy(gamesTable.id, gamesTable.name, gamesTable.cover, gamesTable.verifiedTags)
     .limit(PAGE_LIMIT)
     .offset(offset);
 
