@@ -26,7 +26,7 @@
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.43.1",
     "lucide-react": "^0.508.0",
-    "next": "15.3.2",
+    "next": "15.4.10",
     "next-safe-action": "^7.10.8",
     "nuqs": "^2.4.3",
     "psn-api": "^2.11.2",
